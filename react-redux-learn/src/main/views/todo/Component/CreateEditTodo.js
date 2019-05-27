@@ -1,6 +1,7 @@
 import React from 'react';
-import axios from 'axios'
+import { connect } from 'react-redux'
 import SimpleReactValidator from 'simple-react-validator';
+import * as todoActions from './../../../../store/actions/todoActions'
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Card from '@material-ui/core/Card';
@@ -33,14 +34,9 @@ class CreateEditTodo extends React.Component {
     saveTodo = (event) => {
         event.preventDefault();
         if(this.validator.allValid()){
-            axios.post("http://localhost:1208/store-todo", this.state.todo).then(response => {
-                alert(response.data.message);
-            }).catch(error => {
-                console.log(error);
-            });
+            this.props.saveTodo(this.state.todo)
         }else{
             this.validator.showMessages();
-            // rerender to show messages for the first time
             this.forceUpdate();
         }
     }
@@ -134,4 +130,16 @@ const styles = theme => ({
     }
 });
 
-export default withStyles(styles)(CreateEditTodo);
+const mapStateToProps = state => {
+    return {
+        response: state.todo.response
+    }
+}
+
+const mapActionToProps = dispatch => {
+    return {
+        saveTodo: (payload) => dispatch(todoActions.saveTodo(payload)) 
+    }
+}
+
+export default connect(mapStateToProps, mapActionToProps)(withStyles(styles)(CreateEditTodo));

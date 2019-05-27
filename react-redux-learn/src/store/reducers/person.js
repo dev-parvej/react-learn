@@ -13,8 +13,9 @@ const reducer = (state = initialState, action) => {
                     age: action.payload.age
                 })
             }
+        default: 
+            return state;
     }
-    return state;
 }
 
 export default reducer;
